@@ -42,7 +42,7 @@ test("upload-only inbox stages files privately and requires owner approval", asy
   assert.equal(inboxData.items[0].name, "portrait.jpg");
   assert.equal("tokenHash" in inboxData.inboxes[0], false);
   assert.equal(inboxData.inboxes[0].url, created.url);
-  const forged = token.slice(0, -1) + (token.endsWith("a") ? "b" : "a");
+  const forged = token.slice(0, 10) + (token[10] === "a" ? "b" : "a") + token.slice(11);
   assert.equal((await worker.fetch(new Request(`https://example.test/inbox/${forged}`), env)).status, 404);
 
   const item = inboxData.items[0];

@@ -215,9 +215,14 @@ async function handleGet(request: Request, env: Env, path: DavPath): Promise<Res
     const length =
       "length" in range && range.length !== undefined ? range.length : suffixLength || object.size - start;
     const end = start + length - 1;
-    status = 206;
-    headers.set("content-range", `bytes ${start}-${end}/${object.size}`);
-    headers.set("content-length", String(length));
+    if (start === 0 && length === object.size) {
+      status = 200;
+      headers.set("content-length", String(object.size));
+    } else {
+      status = 206;
+      headers.set("content-range", `bytes ${start}-${end}/${object.size}`);
+      headers.set("content-length", String(length));
+    }
   } else {
     headers.set("content-length", String(object.size));
   }

@@ -202,6 +202,10 @@ test("WebDAV Range, HEAD, PROPFIND, COPY, MOVE, folder restore, and deletion at 
   assert.equal(range.status, 206);
   assert.equal(await range.text(), "lph");
   assert.equal(range.headers.get("content-range"), "bytes 1-3/5");
+  const fullRange = await call("project/source.txt", "GET", { range: "bytes=0-" });
+  assert.equal(fullRange.status, 200);
+  assert.equal(await fullRange.text(), "alpha");
+  assert.equal(fullRange.headers.has("content-range"), false);
   const head = await call("project/source.txt", "HEAD");
   assert.equal(head.status, 200);
   assert.equal(head.headers.get("content-length"), "5");
